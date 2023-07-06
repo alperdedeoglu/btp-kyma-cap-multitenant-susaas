@@ -148,7 +148,7 @@
   "oauth2-configuration": {
     "token-validity": 900,
     "redirect-uris": [
-      "https://*.a1b2c3d4.kyma.ondemand.com/**",
+      "https://*.kyma.ondemand.com/**",
       "http://*.localhost:5000/**",
       "http://localhost:5000/**"
     ],

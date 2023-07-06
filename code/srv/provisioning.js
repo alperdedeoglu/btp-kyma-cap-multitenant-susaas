@@ -21,7 +21,7 @@ module.exports = (service) => {
         // Set VCAP_SERVICES to fix cross-container access requirements
         process.env.VCAP_SERVICES ??= JSON.stringify({ "hana":[ xsenv.filterServices({tag:'hana'})[0] ] });
 
-        await next();
+        await next(); // DB SCHEMA Creation HDI 
 
         // Trigger tenant broker deployment on background
         cds.spawn({ tenant: tenant, subdomain: subdomain }, async (tx) => {
@@ -33,6 +33,13 @@ module.exports = (service) => {
                 // Create APIRule for subscriber subaccount
                 const apiRule = new ApiRule(subdomain, custSubdomain);
                 await apiRule.createApiRule(apiRule.getApiRuleTmpl());
+
+                // Create Rate Limit if required 
+                if (cds.requires["rate-limit"]){
+                    const rateLimiter = await cds.connect.to("rate-limit");
+                    // Set 100 request / min * istio ingress gateway pod instance
+                    await rateLimiter.createRateLimit(tenantURL,100,'60s',tenant)
+                }
 
                 console.log("Success: Onboarding completed!");
 
@@ -73,6 +80,11 @@ module.exports = (service) => {
 
             await automator.undeployTenantArtifacts(tenant, subdomain);
             await apiRule.deleteApiRule(apiRule.getApiRuleTmpl());
+
+            if (cds.requires["rate-limit"]){
+                const rateLimiter = await cds.connect.to("rate-limit");
+                await rateLimiter.disableRateLimiting(tenant);
+            }
             
             console.log("Success: Unsubscription completed!");
 

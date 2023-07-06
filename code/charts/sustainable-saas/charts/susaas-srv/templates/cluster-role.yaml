@@ -18,3 +18,13 @@ rules:
 - apiGroups:  ["gateway.kyma-project.io"]
   resources: ["apirules/status"]
   verbs: ["get"]
+- apiGroups: ["networking.istio.io"]
+  resources: ["envoyfilters"]
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch

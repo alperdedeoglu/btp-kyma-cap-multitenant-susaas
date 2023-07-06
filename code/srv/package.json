@@ -26,6 +26,10 @@
   },
   "cds": {
     "requires": {
+      "rate-limit":{
+        "kind": "rest",
+        "impl":"srv/utils/rate-limiter.js"
+      },
       "multitenancy": true,
       "toggles": true,
       "extensibility": true,

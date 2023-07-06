@@ -14,7 +14,6 @@ cds.on('bootstrap', async (app) => {
 
 cds.on('served', async () => {
     const { 'cds.xt.SaasProvisioningService': provisioning } = cds.services
-
     // Add provisioning logic if only multitenancy is there
     if(provisioning){
         let tenantProvisioning = require('./provisioning');

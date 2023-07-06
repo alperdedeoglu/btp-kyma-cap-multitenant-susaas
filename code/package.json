@@ -188,6 +188,10 @@
       ]
     },
     "requires": {
+      "rate-limit":{
+        "kind": "rest",
+        "impl":"srv/utils/rate-limiter.js"
+      },
       "[production]": {
         "multitenancy": true,
         "toggles": true,
